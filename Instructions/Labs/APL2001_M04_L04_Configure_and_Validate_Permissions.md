@@ -60,9 +60,9 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
 
 1. Dans votre navigateur, ouvrez le portail Azure sur `https://portal.azure.com`.
 
-1. Dans le portail Microsoft Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans ce labo
+1. Sur le portail Microsoft Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans ce labo
 
-1. Dans la page de la machine virtuelle Azure **eshoponweb-vm**, dans la barre d’outils, sélectionnez **Démarrer** pour la démarrer.
+1. Sur la page de la machine virtuelle Azure **eshoponweb-vm**, dans la barre d’outils, sélectionnez **Démarrer** pour la démarrer.
 
    > [!NOTE]
    > Ensuite, vous allez configurer le pipeline CI pour qu’il s’exécute avec le pool d’agents correspondant et valider les autorisations d’exécution du pipeline. Vous devez disposer des autorisations nécessaires pour modifier le pipeline et ajouter des autorisations au pool d’agents.
@@ -101,7 +101,7 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
 
 #### Tâche 3 : Configurer le pipeline CD et valider les autorisations
 
-1. Dans le portail Azure DevOps, dans la page du projet **eShopOnWeb**, accédez à **Pipelines > Pipelines**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, accédez à **Pipelines > Pipelines**.
 
 1. Sélectionnez **Nouveau pipeline**.
 
@@ -132,13 +132,13 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
        - download: eshoponweb-ci
    ```
 
-1. Sélectionnez **Enregistrer et exécuter**, puis sélectionnez **Enregistrer et réexécuter**.
+1. Sélectionnez **Enregistrer et exécuter**, puis sélectionnez à nouveau **Enregistrer et exécuter**.
 
 1. Ouvrez le pipeline et notez le message « Ce pipeline a besoin d’une autorisation pour accéder à deux ressources avant que cette exécution puisse continuer à déployer sur WebApp ». Sélectionnez **Afficher**, puis **Autoriser** pour permettre au pipeline de s’exécuter.
 
    ![Capture d’écran du pipeline avec des boutons d’autorisation.](media/pipeline-permission-permit.png)
 
-1. Renommez le pipeline en **eshoponweb-cd-webapp-code**.
+1. Renommez le pipeline **eshoponweb-cd-webapp-code**.
 
 ### Exercice 2 : Configurer et valider les vérifications d’approbation et de branche
 
@@ -146,7 +146,7 @@ Dans cet exercice, vous allez configurer et valider les vérifications d’appro
 
 #### Tâche 1 : Créer un environnement et ajouter des approbations et des vérifications
 
-1. Dans le portail Azure DevOps, dans la page du projet **eShopOnWeb**, sélectionnez **Pipelines > Environnements**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Environnements**.
 
 1. Sélectionnez **Créer un environnement**.
 
@@ -177,7 +177,7 @@ Dans cet exercice, vous allez configurer et valider les vérifications d’appro
 
 #### Tâche 2 : Configurer le pipeline CD pour utiliser le nouvel environnement
 
-1. Dans le portail Azure DevOps, dans la page du projet **eShopOnWeb**, sélectionnez **Pipelines > Pipelines**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Pipelines**.
 
 1. Ouvrez le pipeline **eshoponweb-cd-webapp-code**.
 
@@ -243,7 +243,7 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 #### Tâche 1 : Supprimer les ressources Azure
 
-1. Dans le portail Microsoft Azure, accédez au groupe de ressources **rg-eshoponweb-perm** contenant les ressources déployées et sélectionnez **Supprimer le groupe de ressources** pour supprimer toutes les ressources créées dans ce labo.
+1. Sur le portail Microsoft Azure, accédez au groupe de ressources **rg-eshoponweb-perm** contenant les ressources déployées et sélectionnez **Supprimer le groupe de ressources** pour supprimer toutes les ressources créées dans ce labo.
 
 #### Tâche 2 : Supprimer les pipelines Azure DevOps
 
@@ -257,7 +257,7 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 #### Tâche 3 : Recréer le référentiel Azure DevOps
 
-1. Dans le portail Azure DevOps, dans le projet **eShopOnWeb**, sélectionnez **Paramètres du projet** en bas à gauche.
+1. Dans le projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Paramètres du projet** en bas à gauche.
 
 1. Dans le menu vertical **Paramètres du projet** sur le côté gauche, dans la section **Référentiels**, sélectionnez **Référentiels**.
 
