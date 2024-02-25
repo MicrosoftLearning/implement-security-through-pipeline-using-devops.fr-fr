@@ -77,11 +77,11 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
 
 1. Accédez à la page du projet **eShopOnWeb**.
 
-1. Dans la page du projet **eShopOnWeb**, accédez à **Pipelines > Pipelines**.
+1. Dans la page du projet **eShopOnWeb**, accédez à **Pipelines > Pipelines**.
 
 1. Sélectionnez le pipeline **eshoponweb-ci**, puis sélectionnez **Modifier**.
 
-1. Dans la sous-section **travaux** de la section **étapes**, mettez à jour la valeur de la propriété **pool** pour référencer le pool d’agents auto-hébergé **eShopOnWebSelfPool** que vous avez configuré dans cette tâche, afin qu’il ait le format suivant :
+1. Dans la sous-section **travaux** de la section **étapes**, mettez à jour la valeur de la propriété **pool** pour référencer le pool d’agents auto-hébergé **eShopOnWebSelfPool** que vous avez configuré dans cette tâche, afin qu’il ait le format suivant :
 
    ```yaml
      jobs:
@@ -91,7 +91,7 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
        - task: DotNetCoreCLI@2
    ```
 
-1. Sélectionnez **Enregistrer**, puis choisissez de valider directement dans la branche principale.
+1. Sélectionnez **Enregistrer**, puis choisissez de valider directement dans la branche primaire.
 
 1. Sélectionnez **Enregistrer** à nouveau.
 
@@ -101,7 +101,7 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
 
 #### Tâche 3 : Configurer le pipeline CD et valider les autorisations
 
-1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, accédez à **Pipelines > Pipelines**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, accédez à **Pipelines > Pipelines**.
 
 1. Sélectionnez **Nouveau pipeline**.
 
@@ -121,7 +121,7 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
    - **sous-réseaux azure** avec **sous-réseaux azure managés**
    - **az400-webapp-NAME** avec un nom global unique de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-perm-** suivie d’un nombre à six chiffres aléatoire. 
 
-1. Mettez à jour le fichier YAML pour utiliser le pool d’agents **eShopOnWebSelfPool**. Pour ce faire, définissez la section du **pool** sur la valeur suivante :
+1. Mettez à jour le fichier YAML pour utiliser le pool d’agents **eShopOnWebSelfPool**. Pour ce faire, définissez la section du **pool** sur la valeur suivante :
 
    ```yaml
      jobs:
@@ -134,7 +134,7 @@ Dans cet exercice, vous allez importer et exécuter le pipeline CI pour l’appl
 
 1. Sélectionnez **Enregistrer et exécuter**, puis sélectionnez à nouveau **Enregistrer et exécuter**.
 
-1. Ouvrez le pipeline et notez le message « Ce pipeline a besoin d’une autorisation pour accéder à deux ressources avant que cette exécution puisse continuer à déployer sur WebApp ». Sélectionnez **Afficher**, puis **Autoriser** pour permettre au pipeline de s’exécuter.
+1. Ouvrez le pipeline et notez le message « Ce pipeline a besoin d’une autorisation pour accéder à deux ressources avant que cette exécution puisse continuer à déployer sur WebApp ». Sélectionnez **Afficher**, puis **Autoriser** pour permettre au pipeline de s’exécuter.
 
    ![Capture d’écran du pipeline avec des boutons d’autorisation.](media/pipeline-permission-permit.png)
 
@@ -146,7 +146,7 @@ Dans cet exercice, vous allez configurer et valider les vérifications d’appro
 
 #### Tâche 1 : Créer un environnement et ajouter des approbations et des vérifications
 
-1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Environnements**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Environnements**.
 
 1. Sélectionnez **Créer un environnement**.
 
@@ -177,13 +177,13 @@ Dans cet exercice, vous allez configurer et valider les vérifications d’appro
 
 #### Tâche 2 : Configurer le pipeline CD pour utiliser le nouvel environnement
 
-1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Pipelines**.
+1. Sur la page du projet **eShopOnWeb** du portail Azure DevOps, sélectionnez **Pipelines > Pipelines**.
 
 1. Ouvrez le pipeline **eshoponweb-cd-webapp-code**.
 
 1. Sélectionnez **Modifier**.
 
-1. Remplacez les lignes 21 à 27 (directement au-dessus du commentaire **#télécharger des artefacts**) par le contenu suivant :
+1. Remplacez les lignes 21 à 27 (directement au-dessus du commentaire **#télécharger des artefacts**) par le contenu suivant :
 
    ```yaml
    stages:
@@ -253,7 +253,7 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 1. Accédez à **Pipelines > Pipelines**.
 
-1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
+1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
 
 #### Tâche 3 : Recréer le référentiel Azure DevOps
 
@@ -265,7 +265,7 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 1. Dans la fenêtre **Renommer le référentiel eShopOnWeb**, dans la zone de texte **Nom du référentiel**, entrez **eShopOnWeb_old**, puis sélectionnez**Renommer**.
 
-1. De retour dans le volet **Tous les référentiels**, sélectionnez **+ Créer**.
+1. De retour dans le volet **Tous les référentiels**, sélectionnez **+ Créer**.
 
 1. Dans le volet **Créer un référentiel**, dans la zone de texte **Nom du référentiel**, entrez **eShopOnWeb**, décochez la case **Ajouter un fichier README** et sélectionnez **Créer**.
 
@@ -275,7 +275,7 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 1. Dans le menu de navigation de gauche du portail Azure DevOps, sélectionnez **Référentiels**.
 
-1. Dans le volet **eShopOnWeb est vide. Ajouter du code !**, sélectionnez **Importer un référentiel**.
+1. Dans le volet **eShopOnWeb est vide. Ajouter du code !**, sélectionnez **Importer un référentiel**.
 
 1. Dans la fenêtre **Importer un référentiel Git**, collez l’URL `https://github.com/MicrosoftLearning/eShopOnWeb` suivante, puis sélectionnez **Importer** :
 
