@@ -161,7 +161,7 @@ Dans cette tâche, vous allez créer un modèle YAML pour stocker les variables 
    variables:
      resource-group: 'rg-eshoponweb-secure'
      location: 'southcentralus' #the name of the Azure region you want to deploy your resources
-     templateFile: '.azure/bicep/webapp.bicep'
+     templateFile: 'infra/webapp.bicep'
      subscriptionid: 'YOUR-SUBSCRIPTION-ID'
      azureserviceconnection: 'azure subs' #the name of the service connection to your Azure subscription
      webappname: 'eshoponweb-lab-secure-XXXXXX' #the globally unique name of the web app
@@ -249,9 +249,9 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 1. Accédez à **Pipelines > Pipelines**.
 
-1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
+1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
 
-#### Tâche 3 : Recréer le dépôt Azure DevOps
+#### Tâche 3 : Recréer le référentiel Azure DevOps
 
 1. Dans le portail Azure DevOps, dans le projet **eShopOnWeb**, sélectionnez **Paramètres du projet** en bas à gauche.
 
@@ -261,17 +261,17 @@ Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps cr�
 
 1. Dans la fenêtre **Renommer le dépôt eShopOnWeb**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb_old** et sélectionnez**Renommer**.
 
-1. De retour dans le volet **Tous les dépôts**, sélectionnez **+ Créer**.
+1. De retour dans le volet **Tous les dépôts**, sélectionnez **+ Créer**.
 
-1. Dans le volet **Créer un dépôt**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb**, décochez la case **Ajouter un fichier README** et sélectionnez **Créer**.
+1. Dans le volet **Créer un dépôt**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb**, décochez la case **Ajouter un fichier README**, puis sélectionnez **Créer**.
 
-1. De retour dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée de dépôt **eShopOnWeb_old** jusqu’à ce que l’icône de points de suspension **Plus d’options** s’affiche, sélectionnez-la et, dans le menu **Plus d’options**, sélectionnez **Supprimer**.  
+1. De retour dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée du dépôt **eShopOnWeb-old** jusqu’à ce que l’icône des points de suspension **Plus d’options** s’affiche. Sélectionnez-la, puis dans le menu **Plus d’options**, sélectionnez **Supprimer**.  
 
 1. Dans la fenêtre **Supprimer le dépôt eShopOnWeb_old**, entrez **eShopOnWeb_old** et sélectionnez **Supprimer**.
 
 1. Dans le menu de navigation de gauche du portail Azure DevOps, sélectionnez **Dépôts**.
 
-1. Dans le volet **eShopOnWeb est vide. Ajouter du code !**, sélectionnez **Importer un dépôt**.
+1. Dans le volet **eShopOnWeb est vide. Ajoutez du code !**, sélectionnez **Importer un dépôt**.
 
 1. Dans la fenêtre **Importer un référentiel Git**, collez l’URL `https://github.com/MicrosoftLearning/eShopOnWeb` suivante, puis sélectionnez **Importer** :
 
