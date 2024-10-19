@@ -77,8 +77,8 @@ Dans cette tâche, vous allez définir des types de paramètre et des paramètre
 
 1. Remplacez les chemins codés en dur dans les tâches `Restore`, `Build` et `Test` avec les paramètres que vous venez de créer.
 
-   - **Remplacez les projets** : `**/*.sln` par des projets : `${{ "{{" }} parameters.dotNetProjects }}` dans les tâches `Restore` et `Build`.
-   - **Remplacez les projets** : `tests/UnitTests/*.csproj` par des projets : `${{ "{{" }} parametertestProjects }}` dans la tâche `Test`
+   - **Remplacez les projets** : `**/*.sln` par des projets : `${{ parameters.dotNetProjects }}` dans les tâches `Restore` et `Build`.
+   - **Remplacez les projets** : `tests/UnitTests/*.csproj` par des projets : `${{ parameters.testProjects }}` dans la tâche `Test`
 
     Les tâches `Restore`, `Build` et `Test` de la section des étapes du fichier YAML doivent ressembler à ceci :
 
