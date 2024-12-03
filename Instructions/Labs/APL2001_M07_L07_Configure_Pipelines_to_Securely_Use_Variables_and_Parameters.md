@@ -20,44 +20,43 @@ Vous aurez besoin d’un abonnement Azure, d’une organisation Azure DevOps et 
 
 ### Exercice 1 : Vérifier les types de paramètres et variables
 
-#### Tâche 1 : Importer et exécuter le pipeline CI
+#### Tâche 1 : (ignorer si déjà effectuée) importer et exécuter le pipeline CI
 
-Commencez par importer le pipeline CI nommé [eshoponweb-ci.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-ci.yml).
+Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-ci.yml).
 
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
+1. Accédez au Portail Azure DevOps sur `https://aex.dev.azure.com` et ouvrez votre organisation.
 
-1. Ouvrez le projet eShopOnWeb.
+1. Ouvrez le projet **eShopOnWeb** dans Azure DevOps.
 
 1. Accédez à **Pipelines > Pipelines**.
 
-1. Sélectionnez **Créer un pipeline**.
+1. Sélectionnez le bouton **Créer un pipeline**.
 
-1. Sélectionnez **Azure Repos Git (YAML)**.
+1. Sélectionnez **Azure Repos Git (Yaml)**.
 
 1. Sélectionnez le référentiel **eShopOnWeb**.
 
 1. Sélectionnez **Fichier YAML Azure Pipelines existant**.
 
-1. Sélectionnez le fichier **/.ado/eshoponweb-ci.yml**, puis **Continuer**.
+1. Sélectionnez le fichier **/.ado/eshoponweb-ci.yml**, puis cliquez sur **Continuer**.
 
 1. Sélectionnez le bouton **Exécuter** pour exécuter le pipeline.
 
-   > [!NOTE]
-   > Votre pipeline choisira un nom en fonction du nom du projet. Renommez-le pour mieux identifier le pipeline.
+   > **Remarque** : votre pipeline est nommé en fonction du nom du projet. Vous le renommez pour identifier plus facilement le pipeline.
 
-1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis l’option **Renommer/déplacer**.
+1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis **Renommer/déplacer**.
 
-1. Nommez-le **eshoponweb-ci-parameters**, puis sélectionnez **Enregistrer**.
+1. Nommez-le **eshoponweb-ci**, puis sélectionnez **Enregistrer**.
 
 #### Tâche 2 : Vérifier les types de paramètre pour les pipelines YAML
 
 Dans cette tâche, vous allez définir des types de paramètre et des paramètres pour le pipeline.
 
-1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline **eshoponweb-ci-parameters**.
+1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline **eshoponweb-ci**.
 
 1. Sélectionnez **Modifier**.
 
-1. Ajoutez les sections de paramètres et de ressources suivantes en haut du fichier YAML :
+1. Ajoutez les paramètres suivants figurant au-dessus des sections des travaux en haut du fichier YAML :
 
    ```yaml
    parameters:
@@ -68,21 +67,19 @@ Dans cette tâche, vous allez définir des types de paramètre et des paramètre
      type: string
      default: 'tests/UnitTests/*.csproj'
 
-   resources:
-     repositories:
-     - repository: self
-       trigger: none
+   jobs:
+   - job: Build
+     pool: eShopOnWebSelfPool
+     steps:
 
    ```
 
-1. Remplacez les chemins codés en dur dans les tâches `Restore`, `Build` et `Test` avec les paramètres que vous venez de créer.
+1. Remplacez les chemins d’accès codés en dur dans les tâches « Restaurer », « Générer » et « Tester » par les paramètres que vous venez de créer.
 
    - **Remplacez les projets** : `**/*.sln` par des projets : `${{ parameters.dotNetProjects }}` dans les tâches `Restore` et `Build`.
    - **Remplacez les projets** : `tests/UnitTests/*.csproj` par des projets : `${{ parameters.testProjects }}` dans la tâche `Test`
 
-    Les tâches `Restore`, `Build` et `Test` de la section des étapes du fichier YAML doivent ressembler à ceci :
-
-    {% raw %}
+   Les tâches « Restaurer », « Générer » et « Tester » de la section des étapes du fichier YAML doivent ressembler à ceci :
 
     ```yaml
     steps:
@@ -107,9 +104,11 @@ Dans cette tâche, vous allez définir des types de paramètre et des paramètre
     
     ```
 
-    {% endraw %}
+1. Cliquez sur **Valider et enregistrer** pour enregistrer les modifications, puis cliquez sur **Enregistrer**.
 
-1. Enregistrez et exécutez le pipeline. Vérifiez que l’exécution du pipeline se termine avec succès.
+1. Accédez à **Pipelines > Pipelines** et ouvrez le pipeline **eshoponweb-ci** en qui se déclenche automatiquement.
+
+1. Vérifiez que l’exécution du pipeline se termine avec succès.
 
    ![Capture d’écran de l’exécution de pipeline avec des paramètres.](media/pipeline-parameters-run.png)
 
@@ -119,9 +118,9 @@ Dans cette tâche, vous allez sécuriser les variables et les paramètres de vot
 
 1. Accédez à **Pipelines > Bibliothèque**.
 
-1. Sélectionnez le bouton **+ Groupe de variables** pour créer un groupe de variables nommé **BuildConfigurations**.
+1. Sélectionnez le bouton **+ Groupe de variables** pour créer un groupe de variables nommé `BuildConfigurations`.
 
-1. Ajoutez une variable nommée **buildConfiguration** et définissez sa valeur sur `Release`sur .
+1. Ajoutez une variable nommée `buildConfiguration` et définissez sa valeur sur `Release`.
 
 1. Enregistrez le groupe de variables.
 
@@ -129,16 +128,15 @@ Dans cette tâche, vous allez sécuriser les variables et les paramètres de vot
 
 1. Sélectionnez le bouton **Autorisations de pipeline**, puis sélectionnez le bouton **+** pour ajouter un nouveau pipeline.
 
-1. Sélectionnez le pipeline **eshoponweb-ci-parameters** pour permettre au pipeline d’utiliser le groupe de variables.
+1. Sélectionnez le pipeline **eshoponweb-ci** pour permettre au pipeline d’utiliser le groupe de variables.
 
    ![Capture d’écran des autorisations de pipeline.](media/pipeline-permissions.png)
 
-   > [!NOTE]
-   > Vous pouvez également définir des utilisateurs ou des groupes spécifiques pour pouvoir modifier le groupe de variables en cliquant sur le bouton **Sécurité**.
+   > **Remarque** : vous pouvez également définir des utilisateurs ou des groupes spécifiques pour pouvoir modifier le groupe de variables en cliquant sur le bouton **Sécurité**.
 
 1. Accédez à **Pipelines > Pipelines**.
 
-1. Ouvrez le pipeline **eshoponweb-ci-parameters**, puis sélectionnez **Modifier**.
+1. Ouvrez le pipeline **eshoponweb-ci-**, puis sélectionnez **Modifier**.
 
 1. En haut du fichier yaml, juste sous les paramètres, référencez le groupe de variables en ajoutant ce qui suit :
 
@@ -147,9 +145,7 @@ Dans cette tâche, vous allez sécuriser les variables et les paramètres de vot
      - group: BuildConfigurations
    ```
 
-1. Dans la tâche « Générer », remplacez la commande : 'build’ par les lignes suivantes pour utiliser la configuration de build à partir du groupe de variables.
-
-    {% raw %}
+1. Dans la tâche « Générer », ajoutez le paramètre de configuration à la tâche pour utiliser la configuration de build à partir du groupe de variables.
 
     ```yaml
             command: 'build'
@@ -157,12 +153,13 @@ Dans cette tâche, vous allez sécuriser les variables et les paramètres de vot
             configuration: $(buildConfiguration)
     ```
 
-    {% endraw %}
+1. Cliquez sur **Valider et enregistrer** pour enregistrer les modifications, puis cliquez sur **Enregistrer**.
 
-1. Enregistrez et exécutez le pipeline. Il doit s’exécuter correctement avec la configuration de build définie sur `Release`. Vous pouvez le vérifier en examinant les journaux de la tâche « Générer ».
+1. Ouvrez l’exécution de pipeline **eshoponweb-ci**. Il doit s’exécuter correctement avec la configuration de build définie sur « Lancement ». Vous pouvez le vérifier en examinant les journaux de la tâche « Générer ».
 
-> [!NOTE]
-> En suivant cette approche, vous pouvez sécuriser vos variables et paramètres en utilisant des groupes de variables sans avoir à les coder en dur dans les fichiers YAML.
+> **Remarque** : si vous ne voyez pas la configuration de build définie sur « Lancement » dans les journaux, activez les diagnostics du système et réexécutez le pipeline pour afficher la valeur de configuration.
+
+> **Remarque** : sn suivant cette approche, vous pouvez sécuriser vos variables et paramètres en utilisant des groupes de variables sans avoir à les coder en dur dans les fichiers YAML.
 
 #### Tâche 4 : Validation des variables et paramètres obligatoires
 
@@ -170,40 +167,26 @@ Dans cette tâche, vous allez valider les variables obligatoires avant l’exéc
 
 1. Accédez à **Pipelines > Pipelines**.
 
-1. Ouvrez le pipeline **eshoponweb-ci-parameters**, puis sélectionnez **Modifier**.
+1. Ouvrez le pipeline **eshoponweb-ci-**, puis sélectionnez **Modifier**.
 
-1. Dans la section des étapes, au début (en suivant la ligne `stage:`), ajoutez une nouvelle étape nommée **Valider** pour valider les variables obligatoires avant l’exécution du pipeline.
+1. Dans la section des étapes, au début (en suivant la ligne **steps**), ajoutez une nouvelle tâche de script pour valider les variables obligatoires avant l’exécution du pipeline.
 
     ```yaml
-    - stage: Validate
-      displayName: Validate mandatory variables
-      jobs:
-      - job: ValidateVariables
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-        - script: |
-            if [ -z "$(buildConfiguration)" ]; then
-              echo "Error: buildConfiguration variable is not set"
-              exit 1
-            fi
-          displayName: 'Validate Variables'
+    - script: |
+        IF NOT DEFINED buildConfiguration (
+          ECHO Error: buildConfiguration variable is not set
+          EXIT /B 1
+        )
+      displayName: 'Validate Variables'
      ```
 
-    > [!NOTE]
-    > Cette étape exécute un script pour valider la variable buildConfiguration. Si les variables ne sont pas définies, le script échouera et le pipeline s’arrêtera.
+    > **Remarque** : il s’agit d’une validation simple pour vérifier si la variable est définie. Si les variables ne sont pas définies, le script échouera et le pipeline s’arrêtera. Vous pouvez ajouter une validation plus complexe pour vérifier la valeur de la variable ou si elle est définie sur une valeur spécifique.
 
-1. Faites en sorte que l’étape **Génération** dépende de l’étape **Valider** en ajoutant `dependsOn: Validate` au début de l’étape **Génération** :
+1. Cliquez sur **Valider et enregistrer** pour enregistrer les modifications, puis cliquez sur **Enregistrer**.
 
-    ```yaml
-    - stage: Build
-      displayName: Build .Net Core Solution
-      dependsOn: Validate
-    ```
+1. Ouvrez l’exécution de pipeline **eshoponweb-ci**. Il s’exécute correctement, car la variable buildConfiguration est définie dans le groupe de variables.
 
-1. Enregistrez et exécutez le pipeline. Il s’exécute correctement, car la variable buildConfiguration est définie dans le groupe de variables.
-
-1. Pour tester la validation, supprimez la variable buildConfiguration du groupe de variables ou supprimez le groupe de variables, puis réexécutez le pipeline. Il doit échouer avec l’erreur suivante :
+1. Pour tester la validation, supprimez la variable buildConfiguration du groupe de variables ou renommez la variable, puis réexécutez le pipeline. Il doit échouer avec l’erreur suivante :
 
     ```yaml
     Error: buildConfiguration variable is not set   
@@ -211,7 +194,10 @@ Dans cette tâche, vous allez valider les variables obligatoires avant l’exéc
 
     ![Capture d’écran de l’exécution du pipeline avec échec de la validation.](media/pipeline-validation-fail.png)
 
-1. Ajoutez le groupe de variables et la variable buildConfiguration au groupe de variables et réexécutez le pipeline. Cette opération doit s’exécuter avec succès.
+1. Ajoutez la variable buildConfiguration au groupe de variables et réexécutez le pipeline. Cette opération doit s’exécuter avec succès.
+
+> [!IMPORTANT]
+> N’oubliez pas de supprimer les ressources créées dans le portail Azure pour éviter les frais inutiles.
 
 ## Révision
 
