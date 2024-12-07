@@ -20,6 +20,8 @@ En préparation des labos, il est essentiel que votre environnement soit correct
 
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli). Installez Azure CLI sur les machines d’agent auto-hébergés.
 
+- [Kit de développement logiciel (SDK) .NET - Dernière version](https://dotnet.microsoft.com/download/visual-studio-sdks) Installez le Kit de développement logiciel (SDK) sur les machines d’agent autohébergés.
+
 ## Instructions pour créer une organisation Azure DevOps (vous ne devez effectuer cette opération qu’une seule fois)
 
 > **Remarque** : commencez à l’étape 3, si vous avez déjà configuré un **compte Microsoft personnel** et un abonnement Azure actif lié à ce compte.
@@ -52,7 +54,19 @@ En préparation des labos, il est essentiel que votre environnement soit correct
 
 1. Une fois que l’écran affiche l’ID d’abonnement Azure lié sur la partie supérieure, modifiez le nombre de **travaux parallèles payés** pour **CI/CD hébergé par MS** de 0 à **1**. Sélectionnez ensuite le bouton **ENREGISTRER** au bas de l’écran.
 
-1. Vous pouvez **attendre au moins 3 heures avant d’utiliser les capacités CI/CD** afin que les nouveaux paramètres soient reflétés dans le serveur principal. Sinon, vous verrez toujours le message *« Aucun parallélisme hébergé n’a été acheté ou accordé ».*
+   > **Note** : vous pouvez **attendre quelques minutes avant d’utiliser les capacités CI/CD** afin que les nouveaux paramètres soient reflétés dans le serveur principal. Sinon, vous verrez toujours le message *« Aucun parallélisme hébergé n’a été acheté ou accordé ».*
+
+1. Dans **Paramètres d’organisation**, accédez à la section **Pipelines** et cliquez sur **Paramètres**.
+
+1. Basculez le commutateur sur **Désactivé** pour **Désactiver la création de pipelines de build classiques** et **Désactiver la création de pipelines de mise en production classiques**.
+
+   > **Note** : la définition de **Désactiver la création de pipelines de mise en production classiques** sur **Activé** masque les options de création de pipeline de mise en production classique comme le menu **Mise en production** dans la section **Pipeline** de DevOps Projects.
+
+1. Dans **Paramètres d’organisation**, accédez à la section **Sécurité** et cliquez sur **Stratégies**.
+
+1. Basculez le commutateur sur **Activé** pour **Autoriser les projets publics**.
+
+   > **Note** : les extensions utilisées dans certains labos peuvent nécessiter un projet public pour autoriser l’utilisation de la version gratuite.
 
 ## Instructions pour créer et configurer le projet Azure DevOps (à faire une seule fois)
 
@@ -96,48 +110,21 @@ Tout d’abord, vous allez créer un projet Azure DevOps **eShopOnWeb** à utili
    - Conteneur de dossiers **.devcontainer** configuré pour le développement à l’aide de conteneurs (localement dans VS Code ou GitHub Codespaces).
    - Le dossier **.azure** contient l’infrastructure de modèle ARM et Bicep en tant que modèles de code.
    - **Définitions de workflow GitHub YAML du conteneur de dossiers .github**.
-   - Le dossier **src** contient le site web .NET 6 utilisé dans les scénarios de labo. 
+   - Le dossier **src** contient le site web .NET 8 utilisé dans les scénarios de labo.
 
 1. Laissez ouverte la fenêtre du navigateur web.  
 
-### Créer un principal de service et une connexion de service pour accéder aux ressources Azure
+1. Accédez à **Repos > Branches**.
 
-Ensuite, vous allez créer un principal de service en utilisant Azure CLI et une connexion de service dans Azure DevOps, ce qui vous permettra de déployer des ressources dans votre abonnement Azure et d’y accéder.
+1. Pointez sur la branche **principale**, puis cliquez sur les points de suspension à droite de la colonne.
 
-1. Démarrez un navigateur web, accédez au portail Azure à l’adresse `https://portal.azure.com`, puis connectez-vous avec le compte d’utilisateur disposant du rôle Propriétaire dans l’abonnement Azure que vous utiliserez dans les labos de ce cours et du rôle Administrateur général dans le locataire Microsoft Entra associé à cet abonnement.
+1. Cliquez sur **Définir comme branche par défaut**.
 
-1. Dans le Portail Azure, sélectionnez l’icône **Cloud Shell** située directement à droite de la zone de texte de recherche en haut de la page.
+### Créer une connexion de service pour accéder aux ressources Azure
 
-1. Si vous êtes invité à sélectionner **Bash** ou **PowerShell**, sélectionnez **Bash**.
+Vous devez ensuite créer une connexion de service dans Azure DevOps, ce qui vous permettra de déployer des ressources dans votre abonnement Azure et d’y accéder.
 
-   > [!NOTE]
-   > Si c’est la première fois que vous démarrez **Cloud Shell** et que vous voyez le message **Vous n’avez aucun stockage monté**, sélectionnez l’abonnement que vous utilisez dans ce labo, puis sélectionnez **Créer un stockage**.
-
-1. À partir de l’invite **Bash**, dans le volet **Cloud Shell**, exécutez les commandes suivantes pour récupérer les valeurs de l’ID d’abonnement Azure et des attributs de nom d’abonnement :
-
-   ```bash
-   subscriptionName=$(az account show --query name --output tsv)
-   subscriptionId=$(az account show --query id --output tsv)
-   echo $subscriptionName
-   echo $subscriptionId
-   ```
-
-   > [!NOTE]
-   > Copiez les deux valeurs dans un fichier texte. Vous en aurez besoin dans les labos de ce cours.
-
-1. À partir de l’invite **Bash** dans le volet **Cloud Shell**, exécutez la commande suivante pour créer un principal de service :
-
-   ```bash
-   az ad sp create-for-rbac --name sp-eshoponweb-azdo --role contributor --scopes /subscriptions/$subscriptionId
-   ```
-
-   > [!NOTE]
-   > La commande va générer une sortie JSON. Copiez la sortie dans un fichier texte. Vous en aurez besoin rapidement.
-
-   > [!NOTE]
-   > Enregistrez la valeur du nom du principal de sécurité, son ID et l’ID de locataire inclus dans la sortie JSON. Vous en aurez besoin dans les labos de ce cours.
-
-1. Revenez à la fenêtre du navigateur web affichant le portail Azure DevOps avec le projet **eShopOnWeb** ouvert et sélectionnez **Paramètres du projet** dans le coin inférieur gauche du portail.
+1. Lancez un navigateur web, accédez au portail Azure DevOps avec le projet **eShopOnWeb** ouvert et sélectionnez **Paramètres du projet** dans le coin inférieur gauche du portail.
 
 1. Sous Pipelines, sélectionnez **Connexions de service**, puis le bouton **Créer une connexion de service**.
 
@@ -145,19 +132,19 @@ Ensuite, vous allez créer un principal de service en utilisant Azure CLI et une
 
 1. Dans le volet **Nouvelle connexion de service**, sélectionnez **Azure Resource Manager**, puis **Suivant** (Il peut être nécessaire de faire défiler l’écran vers le bas).
 
-1. Ensuite, sélectionnez **Principal du service (manuel)** puis sélectionnez **Suivant**.
+1. Sélectionnez **Fédération d’identité de charge de travail (automatique)** et **Suivant**.
 
-1. Remplissez les champs vides à l’aide des informations collectées lors des étapes précédentes :
+   > **Note** : vous pouvez également utiliser la **fédération d’identité de charge de travail (manuelle)** si vous préférez configurer manuellement la connexion de service. Suivez les étapes de la [documentation Azure DevOps](https://learn.microsoft.com/azure/devops/pipelines/library/connect-to-azure) pour créer manuellement la connexion de service.
 
-   - ID et nom de l’abonnement.
-   - ID du principal de service (ou clientId/AppId), clé du principal de service (ou mot de passe) et TenantId.
-   - Dans **Nom de la connexion de service** tapez **azure subs**. Ce nom sera référencé dans les pipelines YAML pour référencer la connexion de service afin d’accéder à votre abonnement Azure.
+1. Renseignez les champs vides à l’aide des informations suivantes :
+    - **Abonnement**: Sélectionnez votre abonnement Azure.
+    - **Groupe de ressources** : sélectionnez le groupe de ressources dans lequel vous souhaitez déployer les ressources des services.
+    - **Nom de la connexion de service** : entrez **`azure subs`**. Ce nom sera référencé dans les pipelines YAML lors de l’accès à votre abonnement Azure.
 
-   ![Capture d’écran de la configuration de la connexion de service Azure.](media/azure-service-connection.png)
+1. Vérifiez que l’option **Accorder une autorisation d’accès à tous les pipelines** est décochée et sélectionnez **Enregistrer**.
 
-1. Ne cochez pas **Accorder une autorisation d’accès à tous les pipelines**. Sélectionnez **Vérifier et enregistrer**.
+   > **Note :** l’option **Accorder une autorisation d’accès à tous les pipelines** n’est pas recommandée pour les environnements de production. Elle est utilisée uniquement dans ce labo pour simplifier la configuration du pipeline.
 
-   > [!NOTE]
-   > L’autorisation **Accorder une autorisation d’accès à tous les pipelines** n’est pas recommandée pour les environnements de production. Elle est utilisée uniquement dans ce labo pour simplifier la configuration du pipeline.
+   > **Note** : si vous voyez un message d’erreur indiquant que vous n’avez pas les autorisations nécessaires pour créer une connexion de service, réessayez ou configurez la connexion de service manuellement.
 
 Vous avez maintenant effectué les étapes préalables nécessaires pour poursuivre les labos.

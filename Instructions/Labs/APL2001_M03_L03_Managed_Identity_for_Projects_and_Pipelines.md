@@ -10,35 +10,41 @@ Les identités managées offrent une méthode sécurisée pour contrôler l’ac
 
 Dans ce labo, vous allez créer une identité managée et l’utiliser dans des pipelines YAML Azure DevOps exécutés sur des agents auto-hébergés pour déployer des ressources Azure.
 
-Le labo prend environ **45** minutes.
+Le labo prend environ **30** minutes.
 
 ## Avant de commencer
 
 Vous aurez besoin d’un abonnement Azure, d’une organisation Azure DevOps et de l’application eShopOnWeb pour suivre les labos.
 
-- Procédez comme suit pour [valider votre environnement de labo](APL2001_M00_Validate_Lab_Environment.md).
 - Vérifiez que vous disposez d'un compte Microsoft ou d'un compte Microsoft Entra avec le rôle Contributeur ou Propriétaire dans l'abonnement Azure. Pour plus d’informations, consultez [Répertorier les attributions de rôle Azure à l’aide du portail Azure](https://learn.microsoft.com/azure/role-based-access-control/role-assignments-list-portal) et [Afficher et attribuer des rôles d’administrateur dans Azure Active Directory](https://learn.microsoft.com/azure/active-directory/roles/manage-roles-portal).
-- Suivez le labo [Configurer des agents et des pools d’agents pour des pipelines sécurisés](APL2001_M03_L02_Configure_Agents_And_Agent_Pools_for_Secure_Pipelines.md).
+
+## Prérequis
+
+Effectuez les labos :
+
+- Procédez comme suit pour [valider votre environnement de labo](APL2001_M00_Validate_Lab_Environment.md).
+- [Configurer une structure de projet et de référentiel pour prendre en charge les pipelines sécurisés](APL2001_M01_L01_Configure_a_Project_and_Repository_Structure_to_Support_Secure_Pipelines.md)
+- [Configurer des agents et des pools d’agents pour des pipelines sécurisés](APL2001_M02_L02_Configure_Agents_And_Agent_Pools_for_Secure_Pipelines.md)
 
 ## Instructions
 
-### Exercice 1 : Importer et exécuter des pipelines CI/CD
+### Exercice 0 : (ignorer si déjà effectué) importer et exécuter des pipelines CI/CD
 
-Dans cet exercice, vous allez importer et exécuter le pipeline CI, configurer la connexion de service avec votre abonnement Azure, puis importer et exécuter le pipeline CD.
+Dans cet exercice, vous allez importer et exécuter des pipelines CI/CD dans le projet Azure DevOps.
 
-#### Tâche 1 : importer et exécuter le pipeline CI
+#### Tâche 1 : (ignorer si déjà effectuée) importer et exécuter le pipeline CI
 
 Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-ci.yml).
 
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
+1. Accédez au Portail Azure DevOps sur `https://aex.dev.azure.com` et ouvrez votre organisation.
 
-1. Ouvrez le projet **eShopOnWeb**.
+1. Ouvrez le projet **eShopOnWeb** dans Azure DevOps.
 
 1. Accédez à **Pipelines > Pipelines**.
 
 1. Sélectionnez le bouton **Créer un pipeline**.
 
-1. Sélectionnez **Azure Repos Git (YAML)**.
+1. Sélectionnez **Azure Repos Git (Yaml)**.
 
 1. Sélectionnez le référentiel **eShopOnWeb**.
 
@@ -48,21 +54,21 @@ Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://gith
 
 1. Sélectionnez le bouton **Exécuter** pour exécuter le pipeline.
 
-   > [!NOTE]
-   > Votre pipeline choisira un nom en fonction du nom du projet. Renommez-le pour mieux identifier le pipeline.
+   > **Remarque** : votre pipeline est nommé en fonction du nom du projet. Vous le renommez pour identifier plus facilement le pipeline.
 
-1. Accédez à **Pipelines > Pipelines**, sélectionnez le pipeline récemment créé, sélectionnez les points de suspension, puis sélectionnez l’option **Renommer/déplacer**.
+1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis **Renommer/déplacer**.
 
 1. Nommez-le **eshoponweb-ci**, puis sélectionnez **Enregistrer**.
 
-#### Tâche 2 : importer et exécuter le pipeline CD
+#### Tâche 2 : (ignorer si déjà effectuée) importer et exécuter le pipeline CD
 
-> [!NOTE]
-> Dans cette tâche, vous allez importer et exécuter le pipeline CD appelé [eshoponweb-cd-webapp-code.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-cd-webapp-code.yml).
+> **Remarque** : dans cette tâche, vous allez importer et exécuter le pipeline CD appelé [eshoponweb-cd-webapp-code.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-cd-webapp-code.yml).
 
-1. Dans le volet **Pipelines** du projet **eShopOnWeb**, sélectionnez le bouton **Nouveau pipeline**.
+1. Accédez à **Pipelines > Pipelines**.
 
-1. Sélectionnez **Azure Repos Git (YAML)**.
+1. Sélectionnez le bouton **Nouveau pipeline**.
+
+1. Sélectionnez **Azure Repos Git (Yaml)**.
 
 1. Sélectionnez le référentiel **eShopOnWeb**.
 
@@ -74,59 +80,58 @@ Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://gith
 
    ```yaml
    variables:
-     resource-group: 'AZ400-EWebShop-NAME'
-     location: 'southcentralus'
-     templateFile: '.azure/bicep/webapp.bicep'
+     resource-group: 'YOUR-RESOURCE-GROUP-NAME'
+     location: 'centralus'
+     templateFile: 'infra/webapp.bicep'
      subscriptionid: 'YOUR-SUBSCRIPTION-ID'
-     azureserviceconnection: 'azure subs'
-     webappname: 'az400-webapp-NAME'
+     azureserviceconnection: 'YOUR-AZURE-SERVICE-CONNECTION-NAME'
+     webappname: 'YOUR-WEB-APP-NAME'
    ```
 
-1. Dans la section des variables, remplacez les espaces réservés par les valeurs suivantes :
+1. Remplacez les valeurs des variables par les valeurs de votre environnement :
 
-   - **AZ400-EWebShop-NAME** par le nom de votre préférence, par exemple **rg-eshoponweb**.
-   - **emplacement** par le nom de la région Azure dans laquelle vous souhaitez déployer vos ressources, par exemple, **southcentralus**.
-   - **YOUR-SUBSCRIPTION-ID** par votre ID d’abonnement Azure ;
-   - **az400-webapp-NAME**, avec un nom global unique de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-id-** suivie d’un nombre à six chiffres aléatoire. 
+   - Remplacez **YOUR-RESOURCE-GROUP-NAME** par le nom du groupe de ressources que vous souhaitez utiliser dans ce labo, par exemple, **rg-eshoponweb-secure**.
+   - Définissez la valeur de la variable d’**emplacement** sur le nom de la région Azure dans laquelle vous souhaitez déployer vos ressources, par exemple, **centralus**.
+   - Remplacez **YOUR-SUBSCRIPTION-ID** par votre ID d’abonnement Azure.
+   - Remplacez **YOUR-AZURE-SERVICE-CONNECTION-NAME** par **azure subs**.
+   - Remplacez **YOUR-WEB-APP-NAME** par un nom unique au monde de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-multi-123456** suivie d’un nombre aléatoire à six chiffres.
 
 1. Sélectionnez **Enregistrer et exécuter**, puis choisissez de valider directement dans la branche principale.
 
 1. Sélectionnez de nouveau **Enregistrer et exécuter**.
 
-1. Ouvrez le pipeline. Si vous voyez le message « Ce pipeline a besoin d’une autorisation pour accéder à une ressource avant que cette exécution puisse poursuivre le déploiement vers l’application web », sélectionnez **Afficher**, **Autoriser** et à nouveau **Autoriser**. Cette opération est nécessaire pour permettre au pipeline de créer la ressource Azure App Service.
+1. Ouvrez l’exécution de pipeline. Si vous voyez le message « Ce pipeline a besoin d’une autorisation pour accéder à une ressource avant que cette exécution puisse poursuivre le déploiement vers l’application web », sélectionnez **Afficher**, **Autoriser** et à nouveau **Autoriser**. Cette opération est nécessaire pour permettre au pipeline de créer la ressource Azure App Service.
 
    ![Capture d’écran de l’autorisation d’accès à partir du pipeline YAML.](media/pipeline-deploy-permit-resource.png)
 
-1. Le déploiement peut prendre quelques minutes, attendez que le pipeline s’exécute. La définition CD se compose des tâches suivantes :
+1. Le déploiement peut prendre quelques minutes, attendez que le pipeline s’exécute. Le pipeline est déclenché après l’achèvement du pipeline CI et comprend les tâches suivantes :
 
-   - **AzureResourceManagerTemplateDeployment** : Déploie l’application web Azure App Service à l’aide du modèle bicep.
+   - **AzureResourceManagerTemplateDeployment** : Déploie l’application web Azure App Service à partir d’un modèle bicep.
    - **AzureRmWebAppDeployment** : Publie le site web sur l’application web Azure App Service.
 
-   > [!NOTE]
-   > Si le déploiement échoue, accédez à la page d’exécution du pipeline et sélectionnez **Réexécuter les travaux non réussis** pour appeler une autre exécution de pipeline.
+   > **Remarque** : si le déploiement échoue, accédez à la page d’exécution du pipeline et sélectionnez **Réexécuter les travaux ayant échoué** pour appeler une autre exécution de pipeline.
 
-   > [!NOTE]
-   > Votre pipeline est nommé en fonction du nom du projet. **Renommons**-le pour mieux identifier le pipeline.
+   > **Remarque** : votre pipeline est nommé en fonction du nom du projet. **Renommons**-le pour mieux identifier le pipeline.
 
-1. Accédez à **Pipelines > Pipelines**, sélectionnez le pipeline récemment créé, sélectionnez les points de suspension, puis sélectionnez l’option **Renommer/déplacer**.
+1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis **Renommer/déplacer**.
 
-1. Nommez-le **eshoponweb-cd-webapp-code**, puis sélectionnez **Enregistrer**.
+1. Nommez-le **eshoponweb-cd-webapp-code**, puis cliquez sur **Enregistrer**.
 
-### Exercice 2 : Configurer une identité managée dans des pipelines Azure
+### Exercice 1 : configurer une identité managée dans Azure Pipelines
 
 Dans cet exercice, vous allez utiliser une identité managée pour configurer une nouvelle connexion de service et l’incorporer dans les pipelines CI/CD.
 
-#### Tâche 1 : Configurer un agent auto-hébergé pour utiliser l’identité managée et mettre à jour le pipeline CI
+#### Tâche 1 : définir l’identité managée dans l’abonnement Azure
 
 1. Dans votre navigateur, ouvrez le portail Azure sur `https://portal.azure.com`.
 
-1. Dans le portail Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans ce labo
+1. Dans le portail Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans le [labo précédent](APL2001_M02_L02_Configure_Agents_And_Agent_Pools_for_Secure_Pipelines.md).
 
-1. Dans la page de la machine virtuelle Azure **eshoponweb-vm**, dans la barre d’outils, sélectionnez **Démarrer** pour la démarrer.
+1. Dans la page de la machine virtuelle Azure **eshoponweb-vm**, dans la barre d’outils, sélectionnez **Démarrer** pour la démarrer, au cas où elle serait arrêtée.
 
 1. Dans la page de la machine virtuelle Azure **eshoponweb-vm**, dans le menu vertical situé à gauche, dans la section **Sécurité**, sélectionnez **Identité**.
 
-1. Dans la page **eshoponweb-vm /|Identité**, vérifiez que l’**État** est sur **Activé** et sélectionnez **Attributions des rôles Azure**.
+1. Dans la page **Identité**, vérifiez que l’**état** est sur **Activé** et sélectionnez **Attributions des rôles Azure**.
 
 1. Sélectionnez le bouton **Ajouter une attribution de rôle** et effectuez les actions suivantes :
 
@@ -136,8 +141,7 @@ Dans cet exercice, vous allez utiliser une identité managée pour configurer un
    | Liste déroulante  **Abonnement** | Sélectionnez votre abonnement Azure. |
    | Liste déroulante **Rôle** | Sélectionnez le rôle **Contributeur**. |
 
-   > [!NOTE]
-   > L’étendue au niveau abonnement est nécessaire pour prendre en charge les déploiements dans les labos suivants.
+   > **Remarque** : l’étendue de abonnement est nécessaire pour prendre en charge les déploiements dans les labos suivants.
 
 1. Cliquez sur le bouton **Enregistrer**.
 
@@ -145,7 +149,7 @@ Dans cet exercice, vous allez utiliser une identité managée pour configurer un
 
 #### Tâche 2 : Créer une connexion de service basée sur l’identité managée
 
-1. Basculez vers le navigateur web affichant le projet **eShopOnWeb** dans le portail Azure DevOps sur `https://dev.azure.com`.
+1. Basculez vers le navigateur web affichant le projet **eShopOnWeb** dans le portail Azure DevOps sur `https://aex.dev.azure.com`.
 
 1. Dans le projet **eShopOnWeb**, accédez à **Paramètres du projet > Connexions de service**.
 
@@ -153,25 +157,73 @@ Dans cet exercice, vous allez utiliser une identité managée pour configurer un
 
 1. Comme **méthode d’authentification**, sélectionnez **Identité managée**.
 
-1. Définissez le niveau d’étendue sur **Abonnement** et fournissez les informations collectées pendant la phase de validation de votre environnement lab, notamment l’ID de l’abonnement, le nom de l’abonnement et l’ID du locataire. 
+1. Définissez le niveau d’étendue sur **Abonnement** et fournissez les informations du portail Azure, y compris l’**ID d’abonnement**, le **nom de l’abonnement** et l’**ID de locataire**.
+
+   > **Remarque** : vous trouverez l’**ID d’abonnement** dans le portail Azure en accédant au panneau **Abonnements** et en sélectionnant l’abonnement que vous utilisez. L’**ID de locataire** se trouve dans le panneau **Microsoft Entra ID**.
 
 1. Dans **Nom de la connexion de service** tapez **azure subs managed**. Ce nom est référencé dans les pipelines YAML lors de l’accès à votre abonnement Azure.
 
-1. Sélectionnez **Enregistrer**.
+1. Cliquez sur **Enregistrer**.
 
-#### Tâche 3 : Mettre à jour le pipeline CD
+#### Tâche 3 : mettre à jour le pipeline CI pour utiliser le pool d’agents autohébergés
+
+Dans cette tâche, vous allez mettre à jour le pipeline CI pour utiliser le pool d’agents autohébergés.
 
 1. Basculez vers la fenêtre de navigateur affichant le projet **eShopOnWeb** dans le portail Azure DevOps.
 
 1. Dans la page du projet **eShopOnWeb**, accédez à **Pipelines > Pipelines**.
 
-1. Sélectionnez le pipeline **eshoponweb-cd-webapp-code**, puis sélectionnez **Modifier**.
+1. Sélectionnez le pipeline **eshoponweb-ci**, puis sélectionnez **Modifier**.
 
-1. Dans la section des variables, mettez à jour la variable **serviceConnection** pour utiliser le nom de la connexion de service que vous avez créée dans la tâche précédente, **azure subs managed**.
+1. Dans la sous-section **travaux** de la section **étapes**, mettez à jour la valeur de la propriété **pool** pour référencer le pool d’agents auto-hébergé **eShopOnWebSelfPool** que vous avez configuré dans cette tâche, afin qu’il ait le format suivant :
+
+   ```yaml
+     jobs:
+     - job: Build
+       pool: eShopOnWebSelfPool
+       steps:
+       - task: DotNetCoreCLI@2
+   ```
+
+1. Sélectionnez **Valider et exécuter**, puis choisissez de valider directement dans la branche primaire.
+
+1. Sélectionnez **Enregistrer** à nouveau.
+
+1. Sélectionnez **Exécuter** le pipeline, puis cliquez à nouveau sur **Exécuter**.
+
+1. Vérifiez que le travail de génération s’exécute sur l’agent **eShopOnWebSelfAgent** et qu’il s’exécute correctement.
+
+    > **Remarque** : si vous voyez le message **La demande de l’agent n’est pas en cours d’exécution, car tous les agents potentiels exécutent d’autres requêtes. Position actuelle dans la file d’attente : 1**, vous pouvez attendre que l’agent devienne disponible ou vous pouvez arrêter le travail de l’agent en cours d’exécution. Il peut s’agir du pipeline CD qui s’exécute automatiquement.
+
+    > **Remarque** : si vous voyez le message « Ce pipeline a besoin d’une autorisation pour accéder à une ressource avant que cette exécution puisse continuer à générer la solution .Net Core », dans la page d’exécution du pipeline, sélectionnez **Afficher**, **Autoriser** et à nouveau **Autoriser**. Cela est nécessaire pour permettre au pipeline d’utiliser le pool d’agents autohébergés.
+
+#### Tâche 4 : mettre à jour le pipeline CD pour utiliser le pool d’agents autohébergés et la connexion de service basée sur l’identité managée
+
+Dans cette tâche, vous allez mettre à jour le pipeline CD pour utiliser la connexion de service basée sur l’identité managée et le pool d’agents autohébergés.
+
+1. Basculez vers la fenêtre de navigateur affichant le projet **eShopSecurity** dans le portail Azure DevOps.
+
+   > **Remarque** : **eShopSecurity** est le nom du projet que vous avez créé dans le [premier labo](APL2001_M01_L01_Configure_a_Project_and_Repository_Structure_to_Support_Secure_Pipelines.md).
+
+1. Dans la page du projet **eShopSecurity**, accédez à **Repos > Fichiers**.
+
+1. Sélectionnez le fichier **eshoponweb-secure-variables.yml**, puis cliquez sur le bouton **Modifier**.
+
+1. Dans la section des variables, mettez à jour la variable **azureserviceconnection** pour utiliser le nom de la connexion de service que vous avez créée dans la tâche précédente, **azure subs managed**.
 
    ```yaml
      azureserviceconnection: 'azure subs managed'
    ```
+
+1. Cliquez sur le bouton **Valider**, puis choisissez de valider directement dans la branche primaire.
+
+1. Cliquez à nouveau sur le bouton **Valider**.
+
+1. Basculez vers le projet **eShopOnWeb**.
+
+1. Dans la page du projet **eShopOnWeb**, accédez à **Pipelines > Pipelines**.
+
+1. Sélectionnez le pipeline **eshoponweb-cd-webapp-code**, puis sélectionnez **Modifier**.
 
 1. Dans la sous-section **travaux**de la section **phases**, mettez à jour la valeur de la propriété **pool** pour référencer le pool d’agents auto-hébergé que vous avez créé dans le labo précédent, **eShopOnWebSelfPool** afin de lui donner le format suivant :
 
@@ -184,74 +236,36 @@ Dans cet exercice, vous allez utiliser une identité managée pour configurer un
        - download: eshoponweb-ci
    ```
 
-1. Sélectionnez **Enregistrer**, puis choisissez de valider directement dans la branche principale.
+1. Cliquez sur le bouton **Valider et enregistrer**, puis choisissez de valider directement dans la branche primaire.
 
-1. Sélectionnez **Enregistrer** à nouveau.
+1. Cliquez à nouveau sur **Enregistrer**.
 
-1. Sélectionnez **Exécuter** le pipeline, puis cliquez à nouveau sur **Exécuter**.
+1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline **eshoponweb-cd-webapp-code** déjà en cours d’exécution depuis la tâche précédente.
 
-1. Ouvrez le pipeline. Si vous voyez le message « Ce pipeline a besoin d’une autorisation pour accéder à une ressource avant que cette exécution puisse poursuivre le déploiement vers l’application web », sélectionnez **Afficher**, **Autoriser** et à nouveau **Autoriser**. Cette opération est nécessaire pour permettre au pipeline de créer la ressource Azure App Service.
+1. Cliquez sur l’exécution de pipeline, puis sur **Annuler**. Cliquez sur le bouton **Oui** pour confirmer.
+
+   > **Remarque** : vous allez exécuter le pipeline Activer les diagnostics du système pour afficher les journaux du pipeline.
+
+1. Cliquez sur **Exécuter un nouveau pipeline**, cochez la case « Activer les diagnostics système », puis cliquez sur le bouton **Exécuter**.
+
+1. Ouvrez l’exécution de pipeline.
+
+   > **Remarque** : si vous voyez le message « Ce pipeline a besoin d’une autorisation pour accéder à 2 ressources avant que cette exécution puisse poursuivre le déploiement vers l’application web », sélectionnez **Afficher**, **Autoriser** et à nouveau **Autoriser**. Cela est nécessaire pour permettre au pipeline d’utiliser la connexion de service et le pool d’agents autohébergés.
 
 1. Le déploiement peut prendre quelques minutes, attendez que le pipeline s’exécute.
+
+   > [!IMPORTANT]
+   > Si le pipeline échoue en raison de l’erreur AZ CLI, vous devrez peut-être redémarrer votre agent autohébergé et réexécuter le pipeline.
+   > Pour redémarrer l’agent, dans le portail Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans le labo précédent, connectez-vous à la machine virtuelle à l’aide du bouton **Se connecter** et redémarrez le nom du service de l’agent Azure Pipelines à partir de vstsagent. Cliquez avec le bouton droit sur le service de l’agent et sélectionnez **Redémarrer**.
 
 1. Vous devriez voir dans les journaux de pipeline que le pipeline utilise l’identité managée.
 
    ![Capture d’écran des journaux de pipeline utilisant l’identité managée.](media/pipeline-logs-managed-identity.png)
 
-   > [!NOTE]
-   > Une fois le pipeline terminé, vous pouvez utiliser le portail Azure pour vérifier l’état des ressources de l’application web App Service.
-
-### Exercice 3 : Effectuer le nettoyage des ressources Azure et Azure DevOps
-
-Dans cet exercice, vous allez effectuer le nettoyage post-labo des ressources Azure et Azure DevOps créées dans ce labo.
-
-#### Tâche 1 : Arrêter et libérer la machine virtuelle Azure
-
-1. Accédez à la page affichant le groupe de ressources **rg-eshoponweb** et sélectionnez **Supprimer le groupe de ressources** pour supprimer toutes ses ressources.
+   > **Remarque** : une fois le pipeline terminé, vous pouvez utiliser le portail Azure pour vérifier l’état des ressources de l’application web App Service.
 
    > [!IMPORTANT]
-   > Ne supprimez pas le groupe de ressources **rg-eshoponweb-agentpool** qui contient les ressources de l’agent auto-hébergé. Vous en aurez besoin dans le prochain labo.
-
-1. Dans le portail Azure, accédez à la page affichant la machine virtuelle Azure **eshoponweb-vm** que vous avez déployée dans ce labo
-
-1. Dans la page de la machine virtuelle Azure **eshoponweb-vm**, dans la barre d’outils, sélectionnez **Arrêter** pour l’arrêter et la libérer.
-
-#### Tâche 2 : Supprimer les pipelines Azure DevOps
-
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
-
-1. Ouvrez le projet **eShopOnWeb**.
-
-1. Accédez à **Pipelines > Pipelines**.
-
-1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
-
-   > [!IMPORTANT]
-   > Ne supprimez pas la connexion de service ni le pool d’agents que vous avez créés dans ce labo. Vous en aurez besoin dans le prochain.
-
-#### Tâche 3 : Recréer le dépôt Azure DevOps
-
-1. Dans le portail Azure DevOps, dans le projet **eShopOnWeb**, sélectionnez **Paramètres du projet** en bas à gauche.
-
-1. Dans le menu vertical **Paramètres du projet** sur le côté gauche, dans la section ** Dépôts**, sélectionnez **Dépôts**.
-
-1. Dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée du dépôt **eShopOnWeb** jusqu’à ce que l’icône des points de suspension **Plus d’options** s’affiche. Sélectionnez-la, puis dans le menu **Plus d’options**, sélectionnez **Renommer**.  
-
-1. Dans la fenêtre **Renommer le dépôt eShopOnWeb**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb_old** et sélectionnez **Renommer**.
-
-1. De retour dans le volet **Tous les dépôts**, sélectionnez **+ Créer**.
-
-1. Dans le volet **Créer un dépôt**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb**, décochez la case **Ajouter un fichier README**, puis sélectionnez **Créer**.
-
-1. De retour dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée du dépôt **eShopOnWeb-old** jusqu’à ce que l’icône des points de suspension **Plus d’options** s’affiche. Sélectionnez-la, puis dans le menu **Plus d’options**, sélectionnez **Supprimer**.  
-
-1. Dans la fenêtre **Supprimer le dépôt eShopOnWeb_old**, entrez **eShopOnWeb_old** et sélectionnez **Supprimer**.
-
-1. Dans le menu de navigation de gauche du portail Azure DevOps, sélectionnez **Dépôts**.
-
-1. Dans le volet **eShopOnWeb est vide. Ajoutez du code !**, sélectionnez **Importer un dépôt**.
-
-1. Dans la fenêtre **Importer un référentiel Git**, collez l’URL `https://github.com/MicrosoftLearning/eShopOnWeb` suivante, puis sélectionnez **Importer** :
+   > N’oubliez pas de supprimer les ressources créées dans le portail Azure pour éviter les frais inutiles.
 
 ## Révision
 

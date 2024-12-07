@@ -24,7 +24,7 @@ Dans cet exercice, vous allez configurer une structure de projet sécurisée en 
 
 #### Tâche 1 : Créer un projet d’équipe
 
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
+1. Accédez au Portail Azure DevOps sur `https://aex.dev.azure.com` et ouvrez votre organisation.
 
 1. Ouvrez les **paramètres de votre organisation** en bas à gauche du portail, puis **Projets** sous la section Général.
 
@@ -57,14 +57,17 @@ Vous pouvez gérer les autorisations et les paramètres de chaque projet sépar�
 
 1. Sélectionnez le nouveau référentiel **eShopSecurity**, puis l’onglet **Sécurité**.
 
+   > **Remarque** : vérifiez que vous sélectionnez l’onglet Sécurité dans le référentiel spécifique uniquement, et non pour tous les référentiels du projet. Si vous sélectionnez tous les référentiels, vous risquez de perdre l’accès à d’autres référentiels dans le projet.
+
 1. Supprimez les autorisations Hériter du parent en décochant le bouton à bascule **Héritage**.
 
-1. Sélectionnez le groupe **Contributeurs** et sélectionnez la liste déroulante **Refuser** pour toutes les autorisations, à l’exception de **Lecture**. Cela empêche tous les utilisateurs du groupe Contributeurs d’accéder au référentiel.
+1. Sélectionnez le groupe **Contributeurs** et sélectionnez la liste déroulante **Refuser** pour toutes les autorisations, à l’exception de **Gestion des autorisations** et **Lecture**. Cela empêche tous les utilisateurs du groupe Contributeurs d’accéder au référentiel.
+
+   > **Remarque** : dans un scénario réel, vous refuserez également les autorisations de gestion au groupe Contributeurs. Pour ce labo, nous permettons au groupe Contributeurs de gérer les autorisations pour vous permettre de terminer le labo.
 
 1. Sélectionnez votre utilisateur sous Utilisateurs, puis le bouton **Autoriser** pour accepter toutes les autorisations.
 
-   > [!NOTE]
-   > Si vous ne voyez pas votre nom dans la section **Utilisateurs**, entrez-le dans la zone de texte **Rechercher des utilisateurs ou des groupes**, puis sélectionnez-le dans la liste des résultats.
+   > **Remarque** : si vous ne voyez pas votre nom dans la section **Utilisateurs**, entrez-le dans la zone de texte **Rechercher des utilisateurs ou des groupes**, puis sélectionnez-le dans la liste des résultats.
 
    ![Capture d’écran des paramètres de sécurité du référentiel avec autorisation de lecture et de refus pour toutes les autres autorisations.](media/repository-security.png)
 
@@ -76,7 +79,9 @@ Vous pouvez gérer les autorisations et les paramètres de chaque projet sépar�
 
 #### Tâche 1 : importer et exécuter le pipeline CI
 
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
+Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-ci.yml).
+
+1. Accédez au Portail Azure DevOps sur `https://aex.dev.azure.com` et ouvrez votre organisation.
 
 1. Ouvrez le projet **eShopOnWeb** dans Azure DevOps.
 
@@ -90,18 +95,19 @@ Vous pouvez gérer les autorisations et les paramètres de chaque projet sépar�
 
 1. Sélectionnez **Fichier YAML Azure Pipelines existant**.
 
-1. Sélectionnez le fichier **/.ado/eshoponweb-ci.yml**, puis **Continuer**.
+1. Sélectionnez le fichier **/.ado/eshoponweb-ci.yml**, puis cliquez sur **Continuer**.
 
 1. Sélectionnez le bouton **Exécuter** pour exécuter le pipeline.
 
-   > [!NOTE]
-   > Votre pipeline choisira un nom en fonction du nom du projet. Vous le renommez pour identifier plus facilement le pipeline.
+   > **Remarque** : votre pipeline est nommé en fonction du nom du projet. Vous le renommez pour identifier plus facilement le pipeline.
 
 1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis **Renommer/déplacer**.
 
 1. Nommez-le **eshoponweb-ci**, puis sélectionnez **Enregistrer**.
 
 #### Tâche 2 : importer et exécuter le pipeline CD
+
+> **Remarque** : dans cette tâche, vous allez importer et exécuter le pipeline CD appelé [eshoponweb-cd-webapp-code.yml](https://github.com/MicrosoftLearning/eShopOnWeb/blob/main/.ado/eshoponweb-cd-webapp-code.yml).
 
 1. Accédez à **Pipelines > Pipelines**.
 
@@ -115,14 +121,27 @@ Vous pouvez gérer les autorisations et les paramètres de chaque projet sépar�
 
 1. Sélectionnez le fichier **/.ado/eshoponweb-cd-webapp-code.yml**, puis **Continuer**.
 
-1. Dans la définition du pipeline YAML, sous la section des variables, personnalisez :
+1. Dans la définition du pipeline YAML, définissez la section des variables pour effectuer les opérations suivantes :
 
-   - **AZ400-EWebShop-NAME** par le nom de votre préférence, par exemple **rg-eshoponweb-secure**.
-   - **Emplacement** par le nom de la région Azure dans laquelle vous souhaitez déployer vos ressources, par exemple, **southcentralus**.
-   - **YOUR-SUBSCRIPTION-ID** par votre ID d’abonnement Azure ;
-   - **az400-webapp-NAME**, avec un nom global unique de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-secure-** suivie d’un nombre à six chiffres aléatoire. 
+   ```yaml
+   variables:
+     resource-group: 'YOUR-RESOURCE-GROUP-NAME'
+     location: 'centralus'
+     templateFile: 'infra/webapp.bicep'
+     subscriptionid: 'YOUR-SUBSCRIPTION-ID'
+     azureserviceconnection: 'YOUR-AZURE-SERVICE-CONNECTION-NAME'
+     webappname: 'YOUR-WEB-APP-NAME'
+   ```
 
-1. Sélectionnez **Enregistrer et exécuter**, puis choisissez de commiter directement dans la branche primaire.
+1. Remplacez les valeurs des variables par les valeurs de votre environnement :
+
+   - Remplacez **YOUR-RESOURCE-GROUP-NAME** par le nom du groupe de ressources que vous souhaitez utiliser dans ce labo, par exemple, **rg-eshoponweb-secure**.
+   - Définissez la valeur de la variable d’**emplacement** sur le nom de la région Azure dans laquelle vous souhaitez déployer vos ressources, par exemple, **centralus**.
+   - Remplacez **YOUR-SUBSCRIPTION-ID** par votre ID d’abonnement Azure.
+   - Remplacez **YOUR-AZURE-SERVICE-CONNECTION-NAME** par **azure subs**.
+   - Remplacez **YOUR-WEB-APP-NAME** par un nom unique au monde de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-multi-123456** suivie d’un nombre aléatoire à six chiffres.
+
+1. Sélectionnez **Enregistrer et exécuter**, puis choisissez de valider directement dans la branche principale.
 
 1. Sélectionnez de nouveau **Enregistrer et exécuter**.
 
@@ -135,11 +154,13 @@ Vous pouvez gérer les autorisations et les paramètres de chaque projet sépar�
    - **AzureResourceManagerTemplateDeployment** : Déploie l’application web Azure App Service à partir d’un modèle bicep.
    - **AzureRmWebAppDeployment** : Publie le site web sur l’application web Azure App Service.
 
-1. Votre pipeline est nommé en fonction du nom du projet. Renommons-le pour mieux identifier le pipeline.
+   > **Remarque** : si le déploiement échoue, accédez à la page d’exécution du pipeline et sélectionnez **Réexécuter les travaux ayant échoué** pour appeler une autre exécution de pipeline.
+
+   > **Remarque** : votre pipeline est nommé en fonction du nom du projet. **Renommons**-le pour mieux identifier le pipeline.
 
 1. Accédez à **Pipelines > Pipelines** et sélectionnez le pipeline récemment créé. Sélectionnez les points de suspension puis **Renommer/déplacer**.
 
-1. Nommez-le **eshoponweb-cd-webapp-code**, puis sélectionnez **Enregistrer**.
+1. Nommez-le **eshoponweb-cd-webapp-code**, puis cliquez sur **Enregistrer**.
 
 Vous devez maintenant avoir deux pipelines en cours d’exécution dans votre projet eShopOnWeb.
 
@@ -167,13 +188,11 @@ Dans cette tâche, vous allez créer un modèle YAML pour stocker les variables 
      webappname: 'eshoponweb-lab-secure-XXXXXX' #the globally unique name of the web app
    ```
 
-   > [!IMPORTANT]
-   > Remplacez les valeurs des variables par les valeurs de votre environnement (groupe de ressources, emplacement, ID d’abonnement, connexion de service Azure et nom de l’application web).
+   > **Important** : remplacez les valeurs des variables par les valeurs de votre environnement (groupe de ressources, emplacement, ID d’abonnement, connexion de service Azure et nom de l’application web).
 
 1. Sélectionnez **Commiter**, dans la zone de texte de commentaire de commit, entrez `[skip ci]`, puis sélectionnez **Commiter**.
 
-   > [!NOTE]
-   > En ajoutant le commentaire `[skip ci]` au commit, vous empêchez l’exécution automatique du pipeline, qui, à ce stade, s’exécute par défaut après chaque changement effectué dans le dépôt. 
+   > **Remarque** : en ajoutant le commentaire `[skip ci]` au commit, vous empêchez l’exécution automatique du pipeline qui, à ce stade, s’exécute par défaut après chaque modification du référentiel.
 
 1. À partir de la liste des fichiers du dépôt, ouvrez la définition de pipeline **eshoponweb-cd-webapp-code.yml**, et remplacez la section des variables par les éléments suivants :
 
@@ -184,7 +203,7 @@ Dans cette tâche, vous allez créer un modèle YAML pour stocker les variables 
 
 1. Sélectionnez **Commiter**, acceptez le commentaire par défaut, puis sélectionnez **Commiter** pour réexécuter le pipeline.
 
-1. Vérifiez que l’exécution de pipeline s’effectue correctement. 
+1. Vérifiez que l’exécution de pipeline s’effectue correctement.
 
 Vous disposez maintenant d’un modèle YAML avec les variables utilisées dans le pipeline CD. Vous pouvez réutiliser ce modèle dans d’autres pipelines dans des scénarios où vous devez déployer les mêmes ressources. Par ailleurs, votre équipe d’opérations peut contrôler le groupe de ressources et l’emplacement où les ressources sont déployées ainsi que d’autres informations de vos valeurs de modèle, et vous n’avez pas besoin de faire des changements dans votre définition de pipeline.
 
@@ -202,7 +221,7 @@ Dans cette tâche, vous allez déplacer les modèles YAML vers un référentiel 
 
 1. Ouvrez la définition de pipeline **eshoponweb-cd-webapp-code.yml** dans le dépôt eShopOnWeb.
 
-1. Ajouter ce qui suit à la section des ressources :
+1. Ajoutez les éléments suivants à la section resources avant la section variables dans la définition du pipeline :
 
    ```yaml
      repositories:
@@ -228,52 +247,8 @@ Dans cette tâche, vous allez déplacer les modèles YAML vers un référentiel 
 
 Vous avez maintenant le fichier YAML dans un dépôt et un projet distincts. Vous pouvez réutiliser ce fichier dans d’autres pipelines pour les scénarios où vous devez déployer les mêmes ressources. Par ailleurs, votre équipe d’opérations peut contrôler le groupe de ressources, la sécurité et l’emplacement où les ressources sont déployées ainsi que d’autres informations en modifiant les valeurs du fichier YAML, et vous n’avez pas besoin de faire des changements dans votre définition de pipeline.
 
-### Exercice 2 : Effectuerle nettoyage des ressources Azure et Azure DevOps
-
-Dans cet exercice, vous allez supprimer les ressources Azure et Azure DevOps créées dans ce labo.
-
-#### Tâche 1 : Supprimer les ressources Azure
-
-1. Dans le portail Azure, accédez au groupe de ressources **rg-eshoponweb-secure** contenant les ressources déployées et sélectionnez **Supprimer le groupe de ressources** pour supprimer toutes les ressources créées dans ce labo.
-
-   ![Capture d’écran du bouton Supprimer le groupe de ressources.](media/delete-resource-group.png)
-
-   > [!WARNING]
-   > N’oubliez pas de supprimer toutes les nouvelles ressources Azure que vous n’utilisez plus. La suppression des ressources inutilisées vous évitera d’encourir des frais inattendus.
-
-#### Tâche 2 : Supprimer les pipelines Azure DevOps
-
-1. Accédez au Portail Azure DevOps sur `https://dev.azure.com` et ouvrez votre organisation.
-
-1. Ouvrez le projet **eShopOnWeb**.
-
-1. Accédez à **Pipelines > Pipelines**.
-
-1. Accédez à **Pipelines > Pipelines** et supprimez les pipelines existants.
-
-#### Tâche 3 : Recréer le référentiel Azure DevOps
-
-1. Dans le portail Azure DevOps, dans le projet **eShopOnWeb**, sélectionnez **Paramètres du projet** en bas à gauche.
-
-1. Dans le menu vertical **Paramètres du projet** à gauche, dans la section **Dépôts**, sélectionnez **Dépôts**.
-
-1. Dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée de dépôt **eShopOnWeb** jusqu’à ce que l’icône de points de suspension **Plus d’options** s’affiche, sélectionnez-la et, dans le menu **Plus d’options**, sélectionnez **Renommer**.  
-
-1. Dans la fenêtre **Renommer le dépôt eShopOnWeb**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb_old** et sélectionnez**Renommer**.
-
-1. De retour dans le volet **Tous les dépôts**, sélectionnez **+ Créer**.
-
-1. Dans le volet **Créer un dépôt**, dans la zone de texte **Nom du dépôt**, entrez **eShopOnWeb**, décochez la case **Ajouter un fichier README**, puis sélectionnez **Créer**.
-
-1. De retour dans le volet **Tous les dépôts**, pointez sur l’extrémité droite de l’entrée du dépôt **eShopOnWeb-old** jusqu’à ce que l’icône des points de suspension **Plus d’options** s’affiche. Sélectionnez-la, puis dans le menu **Plus d’options**, sélectionnez **Supprimer**.  
-
-1. Dans la fenêtre **Supprimer le dépôt eShopOnWeb_old**, entrez **eShopOnWeb_old** et sélectionnez **Supprimer**.
-
-1. Dans le menu de navigation de gauche du portail Azure DevOps, sélectionnez **Dépôts**.
-
-1. Dans le volet **eShopOnWeb est vide. Ajoutez du code !**, sélectionnez **Importer un dépôt**.
-
-1. Dans la fenêtre **Importer un référentiel Git**, collez l’URL `https://github.com/MicrosoftLearning/eShopOnWeb` suivante, puis sélectionnez **Importer** :
+> [!IMPORTANT]
+> N’oubliez pas de supprimer les ressources créées dans le portail Azure pour éviter les frais inutiles.
 
 ## Révision
 
