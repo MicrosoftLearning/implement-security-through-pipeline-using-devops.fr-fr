@@ -96,7 +96,7 @@ Commençons par importer le pipeline CI nommé [eshoponweb-ci.yml](https://gith
    - Remplacez **YOUR-AZURE-SERVICE-CONNECTION-NAME** par **azure subs**.
    - Remplacez **YOUR-WEB-APP-NAME** par un nom unique au monde de l’application web à déployer, par exemple, la chaîne **eshoponweb-lab-multi-123456** suivie d’un nombre aléatoire à six chiffres.
 
-1. Sélectionnez **Enregistrer et exécuter**, puis choisissez de valider directement dans la branche principale.
+1. Sélectionnez **Enregistrer et Exécuter**, puis choisissez de valider directement dans la branche primaire.
 
 1. Sélectionnez de nouveau **Enregistrer et exécuter**.
 
