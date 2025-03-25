@@ -22,7 +22,7 @@ Vous aurez besoin d’un abonnement Azure, d’une organisation Azure DevOps et 
 
 - Procédez comme suit pour [valider votre environnement de labo](APL2001_M00_Validate_Lab_Environment.md).
 
-Dans ce labo, vous allez :
+Dans ce labo, vous allez :
 
 - Déployer des ressources sur un abonnement Azure
 - obtenir un accès en lecture aux secrets Azure Key Vault ;
