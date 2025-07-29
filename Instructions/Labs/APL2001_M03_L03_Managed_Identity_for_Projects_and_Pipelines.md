@@ -155,7 +155,7 @@ Dans cet exercice, vous allez utiliser une identité managée pour configurer un
 
 1. Sélectionnez le bouton **Nouvelle connexion de service**, puis **Azure Resource Manager**.
 
-1. Comme **méthode d’authentification**, sélectionnez **Identité managée**.
+1. Sélectionnez **Identité managée (attribuée à l’agent)** comme **Méthode d’authentification**.
 
 1. Définissez le niveau d’étendue sur **Abonnement** et fournissez les informations du portail Azure, y compris l’**ID d’abonnement**, le **nom de l’abonnement** et l’**ID de locataire**.
 
